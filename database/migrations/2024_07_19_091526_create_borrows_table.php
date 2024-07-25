@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('publisher', function (Blueprint $table) {
+        Schema::create('borrows', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('Country');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('Status');
-            $table->string('images')->default(null);
+            $table->unsignedBigInteger('client_id');
+            $table->string('date_borrowed')->default(null);
+            $table->string('date_returned')->default(null);
+            $table->string('status')->default('Pending Approval');
+
+            $table->foreign('client_id')->on('client')->references('id');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('publisher');
+        Schema::dropIfExists('borrows');
     }
 };

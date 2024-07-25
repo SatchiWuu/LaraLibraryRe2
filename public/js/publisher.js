@@ -6,12 +6,13 @@ $(document).ready(function () {
             dataSrc: ''  // This ensures DataTables expects an array directly from the JSON response
         },
         columns: [
+            { data: 'id' },
             { data: 'images' },
             { data: 'name' },
             { data: 'email' },
             { data: 'phone' },
-            { data: 'status' },
-            { data: 'country' },
+            { data: 'Status' },
+            { data: 'Country' },
             {
                 data: null,
                 render: function (data, type, row) {
@@ -93,7 +94,7 @@ $(document).ready(function () {
                 tr.append($("<td>").html(data.publisher.phone));
                 tr.append($("<td>").html(data.publisher.status));
                 tr.append($("<td>").html(data.publisher.phone));
-                tr.append("<td align='center'><a href='#' data-toggle='modal' data-target='#publisherModal' id='editbtn' data-id=" + data.publisher.id + "><i class='fas fa-edit' aria-hidden='true' style='font-size:24px' ></a></i></td>");
+                tr.append('<td align="center"><button data-toggle="modal" data-target="#publisherModal" class="btn btn-sm btn-primary edit-btn" data-id="' + row.id + '">Edit</button></td>');
                 tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.publisher.id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
                 $("#publisherBody").prepend(tr);
             },
@@ -110,7 +111,7 @@ $(document).ready(function () {
         $('#image').remove()
         console.log(e.relatedTarget)
         var id = $(e.relatedTarget).attr('data-id');
-        console.log(id);
+        console.log("id is :"+id);
        
         $('<input>').attr({type: 'hidden', id:'publisherId',name: 'publisherId',value: id}).appendTo('#publisherForm');
         $.ajax({
@@ -120,9 +121,9 @@ $(document).ready(function () {
                    // console.log(data);
                    $("#publisherId").val(data.id);
                    $("#name").val(data.name);
-                   $("#country").val(data.country);
+                   $("#country").val(data.Country);
                    $("#email").val(data.email);
-                   $("#status").val(data.status);
+                   $("#status").val(data.Status);
                    $("#phone").val(data.phone); 
 
                    if (data.images !== undefined) {
@@ -139,7 +140,7 @@ $(document).ready(function () {
           });
     });
 
-    $('#publisherTable #publisherBody').on('click', 'a.deletebtn', function (e) {
+    $('#publisherTable #publisherBody').on('click', 'button.deletebtn', function (e) {
         var id = $(this).data('id');
         var $row = $(this).closest('tr');
         console.log(id);
@@ -184,7 +185,7 @@ $(document).ready(function () {
     $("#publisherUpdate").on('click', function (e) {
         e.preventDefault
         var id = $('#publisherId').val();
-        var $row = $('tr td > a[data-id="' + id + '"]').closest('tr');
+        var $row = $('tr td > button[data-id="' + id + '"]').closest('tr');
         console.log(id)
         // var data = $('#cform')[0];
         let formData = new FormData($('#publisherForm')[0]);

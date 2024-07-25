@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('publisher', function (Blueprint $table) {
+        Schema::create('borrow_list', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('Country');
-            $table->string('email');
-            $table->string('phone');
-            $table->string('Status');
-            $table->string('images')->default(null);
+            $table->unsignedBigInteger('borrows_id');
+            $table->unsignedBigInteger('book_id');
+
+            $table->foreign('borrows_id')->on('borrows')->references('id');
+            $table->foreign('book_id')->on('books')->references('id');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('publisher');
+        Schema::dropIfExists('borrow_list');
     }
 };

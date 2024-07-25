@@ -7,6 +7,7 @@ $(document).ready(function () {
             dataSrc: ''  // This ensures DataTables expects an array directly from the JSON response
         },
         columns: [
+            { data: 'id' },
             { data: 'lname' },
             { data: 'fname' },
             { data: 'address' },
@@ -15,13 +16,13 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function (data, type, row) {
-                    return '<button data-toggle="modal" data-target="#bookModal" class="btn btn-sm btn-primary edit-btn" data-id="' + row.id + '">Edit</button>';
+                    return '<button data-toggle="modal" data-target="#authorModal" class="btn btn-sm btn-primary edit-btn" data-id="' + {data: 'id'} + '">Edit</button>';
                 }
             },
             {
                 data: null,
                 render: function (data, type, row) {
-                    return '<button class="btn btn-sm btn-danger delete-btn deletebtn"  data-id="' + row.id + '">Delete</button>';
+                    return '<button class="btn btn-sm btn-danger delete-btn deletebtn"  data-id="' + {data: 'id'} + '">Delete</button>';
                 }
             }
         ],
@@ -87,14 +88,13 @@ $(document).ready(function () {
                 var img = "<img src='storage/" + data.author.images + "' width='200px', height='200px'/>";
                 var tr = $("<tr>");
                 tr.append($("<td>").html(data.author.id));
-                tr.append($("<td>").html(img));
                 tr.append($("<td>").html(data.author.lname));
                 tr.append($("<td>").html(data.author.fname));
-                tr.append($("<td>").html(data.author.gender));
                 tr.append($("<td>").html(data.author.address));
                 tr.append($("<td>").html(data.author.phone));
-                tr.append("<td align='center'><a href='#' data-toggle='modal' data-target='#authorModal' id='editbtn' data-id=" + data.author.id + "><i class='fas fa-edit' aria-hidden='true' style='font-size:24px' ></a></i></td>");
-                tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.author.id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
+                tr.append($("<td>").html(data.author.gender));
+                tr.append("<td align='center'><button data-toggle='modal' data-target='#authorModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.id + "'>Edit</button></td>");
+                tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" + data.id + "'>Delete</button></td>");
                 $("#authorBody").prepend(tr);
             },
             error: function (error) {
@@ -104,7 +104,6 @@ $(document).ready(function () {
     });
 
     $('#authorModal').on('show.bs.modal', function(e) {
-        
         $("#authorForm").trigger("reset");
         $('#authorId').remove()
         $('#image').remove()
@@ -139,7 +138,7 @@ $(document).ready(function () {
           });
     });
 
-    $('#authorTable #authorBody').on('click', 'a.deletebtn', function (e) {
+    $('#authorTable #authorBody').on('click', 'button.deletebtn', function (e) {
         var id = $(this).data('id');
         var $row = $(this).closest('tr');
         console.log(id);
@@ -167,7 +166,7 @@ $(document).ready(function () {
                         dataType: "json",
                         success: function (data) {
                             console.log(data);
-                            $row.fadeOut(4000, function () {
+                            $row.fadeOut(800, function () {
                                 $row.remove()
                             });
 
@@ -184,7 +183,7 @@ $(document).ready(function () {
     $("#authorUpdate").on('click', function (e) {
         e.preventDefault
         var id = $('#authorId').val();
-        var $row = $('tr td > a[data-id="' + id + '"]').closest('tr');
+        var $row = $('tr td > button[data-id="' + id + '"]').closest('tr');
         console.log(id)
         // var data = $('#cform')[0];
         let formData = new FormData($('#authorForm')[0]);
@@ -204,16 +203,15 @@ $(document).ready(function () {
                 $row.remove()
                 var img = "<img src='storage/" + data.author.images + "' width='200px', height='200px'/>";
                 var tr = $("<tr>");
-                tr.append($("<td>").html(data.author.id));
-                tr.append($("<td>").html(img));
+                tr.append($("<td style='text-align:center'>").html(data.author.id));
                 tr.append($("<td>").html(data.author.lname));
                 tr.append($("<td>").html(data.author.fname));
-                tr.append($("<td>").html(data.author.gender));
                 tr.append($("<td>").html(data.author.address));
                 tr.append($("<td>").html(data.author.phone));
-                tr.append("<td align='center'><a href='#' data-toggle='modal' data-target='#authorModal' id='editbtn' data-id=" + data.author.id + "><i class='fas fa-edit' aria-hidden='true' style='font-size:24px' ></a></i></td>");
-                tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.author.id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
-                $('#authorTable').prepend(tr.hide().fadeIn(5000));
+                tr.append($("<td>").html(data.author.gender));
+                tr.append("<td align='center'><button data-toggle='modal' data-target='#authorModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.id + "'>Edit</button></td>");
+                tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" + data.id + "'>Delete</button></td>");
+                $("#authorBody").prepend(tr);
             },
             error: function (error) {
                 console.log(error);
