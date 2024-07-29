@@ -1,0 +1,37 @@
+
+----
+composer install
+cp .env.example .env
+php artisan key:generate
+****
+php artisan storage:link
+
+Migration Adjustments
+1. Rename  create_books_table. Change 030728 to 060000
+2. In create_books_table. Add the following
+- $table->unsignedBigInteger('publisher_id');
+- $table->foreign('publisher_id')->on('publisher')->references('id');
+- add default('iamges/default-book.jpg') at the end of images column
+
+3. In create_publisher_table. Change images column
+- $table->string('images')->default('default-publisher.jpg')->nullable(true);
+
+4. Change DB in .env. MAKE SURE IT IS UNIQUE 
+- Laralibrary*random numbers* ex. LaraLibrary32139
+
+composer require algolia/algoliasearch-client-php
+php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
+
+Go to .env and add at the bottom:
+ALGOLIA_APP_ID=9BG8G1OSKN
+ALGOLIA_SECRET=3bad43e06bb965f3fad4234cae8ee615
+
+php artisan optimize
+
+Seeder:
+1. Go to BookSeeder and Uncomment the 2 $this->call and run php artisan db:seed --class=BookSeeder
+
+php artisan scout:import "App\Models\Book"
+php artisan serve
+Initialize Assets: https://drive.google.com/drive/folders/1LGHDAaIU_986mPFuLHF93bD4WuDI8jKV?usp=sharing
+----
