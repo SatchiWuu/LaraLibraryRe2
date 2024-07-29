@@ -98,7 +98,7 @@ $(document).ready(function() {
                 id2 = value.id;
                 
                 var card = $("<div class='mt-3 card text-center'>");
-                card.append("<div class='card-header'>"+value.status+"</div>");
+                card.append("<div class='card-header'>"+value.status+"<b> "+id2+" </b></div>");
 
                  var cardbody = $('<div class="card-body">');
                  cardbody.append('<h5 class="card-title">Books Borrowed</h5>')
@@ -150,6 +150,45 @@ $(document).ready(function() {
                 dataType: 'json',
                 success: function (data) {
                     console.log(data);
+                    $('#pBody tr').fadeOut(500).promise().done(function() {
+                        $('#pBody').empty();
+                    });
+                    console.log(data.borrowInfo.client_id);
+                id2 = data.borrowInfo.id;
+                
+                var card = $("<div class='mt-3 card text-center border border-success'>");
+                card.append("<div class='card-header'>"+data.borrowInfo.status+"<b> "+id2+" </b></div>");
+
+                 var cardbody = $('<div class="card-body">');
+                 cardbody.append('<h5 class="card-title">Books Borrowed</h5>')
+
+                 var cardText = $('<p class="card-text text-left">')
+
+                $.ajax({
+                    type: "GET",
+                    url: `/api/retrieveBorrowedBooks/${id2}`,
+                    dataType: 'json',
+                    success: function (data2) {
+                        console.log(data2);
+                        $.each(data2, function (key2, value2) {
+                            console.log('form'+value2);
+                            cardText.append(value2.title+', ')
+                        });
+                    },
+                    error: function () {
+                        console.log('AJAX load did not work');
+                        alert("error");
+                    }
+                });
+
+                var cardFoot = $('<div class="card-footer text-muted">');
+                cardFoot.append('Date Requested: '+data.borrowInfo.date_borrowed);
+
+
+                $(cardbody).append(cardText);
+                $(card).append(cardbody);
+                $(card).append(cardFoot);
+                $("#borrowOverview").prepend(card);
                 },
                 error: function (error) {
                     console.log(error);

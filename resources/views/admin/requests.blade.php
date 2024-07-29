@@ -4,6 +4,39 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js">
     </script>
     <script src="{{ asset('js/admin.js') }}"></script>
-    <div id="borrowAll" class="m-4 container border border-secondary p-2">
-  </div>
+
+  <style>
+    .main-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap:20px;
+      flex-direction: row;
+    }
+
+    #borrowAllPending {
+      width: 33%;
+    }
+
+    #borrowAllBorrowing {
+      width: 33%;
+    }
+
+    #borrowAllCompleted {
+      width: 33%;
+    }
+
+  
+  </style>
+
+    <div class="main-container">
+      <div id="borrowAllPending" class="m-4 container border border-secondary p-2">
+      </div>
+
+      <div id="borrowAllBorrowing" class="m-4 container border border-secondary p-2">
+      </div>
+
+      <div id="borrowAllCompleted" class="m-4 container border border-secondary p-2">
+      </div>
+    </div>
 @endsection

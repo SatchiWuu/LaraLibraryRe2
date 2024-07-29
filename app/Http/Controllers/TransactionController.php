@@ -114,7 +114,9 @@ class TransactionController extends Controller
 
     public function retrieveBorrow($id) {
         $query = "
-        SELECT * FROM borrows where client_id=".$id."
+            SELECT * FROM borrows 
+            WHERE client_id = " . $id . "
+            ORDER BY id DESC
         ";
     
         $data = DB::select($query);
