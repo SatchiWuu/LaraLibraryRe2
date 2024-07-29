@@ -32,9 +32,11 @@ $(document).ready(function () {
                 orderable: false,  // Disable ordering on these columns
                 searchable: false  // Disable searching on these columns
             }
-        
+
         ]
     });
+
+
 
     // $.ajax({
     //     type: "GET",
@@ -67,77 +69,80 @@ $(document).ready(function () {
 
     $("#publisherSubmit").on('click', function (e) {
         e.preventDefault();
-        var data = $('#publisherForm')[0];
-        console.log(data);
-        let formData = new FormData(data);
-        console.log(formData);
-        for (var pair of formData.entries()) {
-            console.log(pair[0] + ', ' + pair[1]);
-        }
-        $.ajax({
-            type: "POST",
-            url: "/api/publisher",
-            data: formData,
-            contentType: false,
-            processData: false,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            dataType: "json",
-            success: function (data) {
-                console.log(data);
-                $("#publisherModal").modal("hide");
-                var img = "<img src='storage/" + data.publisher.images + "' width='200px', height='200px'/>";
-                var tr = $("<tr>");
-                tr.append($("<td>").html(data.publisher.id));
-                tr.append($("<td>").html(img));
-                tr.append($("<td>").html(data.publisher.name));
-                tr.append($("<td>").html(data.publisher.email));
-                tr.append($("<td>").html(data.publisher.phone));
-                tr.append($("<td>").html(data.publisher.status));
-                tr.append($("<td>").html(data.publisher.phone));
-                tr.append('<td align="center"><button data-toggle="modal" data-target="#publisherModal" class="btn btn-sm btn-primary edit-btn" data-id="' + row.id + '">Edit</button></td>');
-                tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.publisher.id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
-                $("#publisherBody").prepend(tr);
-            },
-            error: function (error) {
-                console.log(error);
+        if ($("#publisherForm").valid()) {
+            var data = $('#publisherForm')[0];
+            console.log(data);
+            let formData = new FormData(data);
+            console.log(formData);
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
             }
-        });
+            $.ajax({
+                type: "POST",
+                url: "/api/publisher",
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                dataType: "json",
+                success: function (data) {
+                    console.log(data);
+                    $("#publisherModal").modal("hide");
+                    var img = "<img src='storage/" + data.publisher.images + "' width='200px', height='200px'/>";
+                    var tr = $("<tr>");
+                    tr.append($("<td>").html(data.publisher.id));
+                    tr.append($("<td>").html(img));
+                    tr.append($("<td>").html(data.publisher.name));
+                    tr.append($("<td>").html(data.publisher.email));
+                    tr.append($("<td>").html(data.publisher.phone));
+                    tr.append($("<td>").html(data.publisher.status));
+                    tr.append($("<td>").html(data.publisher.phone));
+                    tr.append('<td align="center"><button data-toggle="modal" data-target="#publisherModal" class="btn btn-sm btn-primary edit-btn" data-id="' + row.id + '">Edit</button></td>');
+                    tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.publisher.id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
+                    $("#publisherBody").prepend(tr);
+                },
+
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
     });
 
-    $('#publisherModal').on('show.bs.modal', function(e) {
-        
+    $('#publisherModal').on('show.bs.modal', function (e) {
+
         $("#publisherForm").trigger("reset");
         $('#publisherId').remove()
         $('#image').remove()
         console.log(e.relatedTarget)
         var id = $(e.relatedTarget).attr('data-id');
-        console.log("id is :"+id);
-       
-        $('<input>').attr({type: 'hidden', id:'publisherId',name: 'publisherId',value: id}).appendTo('#publisherForm');
+        console.log("id is :" + id);
+
+        $('<input>').attr({ type: 'hidden', id: 'publisherId', name: 'publisherId', value: id }).appendTo('#publisherForm');
         $.ajax({
             type: "GET",
             url: `/api/publisher/${id}`,
-            success: function(data){
-                   // console.log(data);
-                   $("#publisherId").val(data.id);
-                   $("#name").val(data.name);
-                   $("#country").val(data.Country);
-                   $("#email").val(data.email);
-                   $("#status").val(data.Status);
-                   $("#phone").val(data.phone); 
+            success: function (data) {
+                // console.log(data);
+                $("#publisherId").val(data.id);
+                $("#name").val(data.name);
+                $("#country").val(data.Country);
+                $("#email").val(data.email);
+                $("#status").val(data.Status);
+                $("#phone").val(data.phone);
 
-                   if (data.images !== undefined) {
+                if (data.images !== undefined) {
                     $("#publisherForm").prepend(`<img src='storage/${data.images}' width='200px', height='200px' id="image"   />`)
-                   } else {
-                        
-                   }    
-                   
-              },
-             error: function(){
-              console.log('AJAX load did not work');
-              alert("error");
-              }
-          });
+                } else {
+
+                }
+
+            },
+            error: function () {
+                console.log('AJAX load did not work');
+                alert("error");
+            }
+        });
     });
 
     $('#publisherTable #publisherBody').on('click', 'button.deletebtn', function (e) {
@@ -200,7 +205,7 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data) {
                 console.log(data);
-                
+
                 $('#publisherModal').modal('hide')
                 $row.remove()
                 var img = "<img src='storage/" + data.publisher.images + "' width='200px', height='200px'/>";
@@ -222,5 +227,18 @@ $(document).ready(function () {
         });
     });
 
+    $(function () {
+        $("#publisherForm").validate({
+            rules: {
+                publisherId: "required",
+                name: "required",
+                country: "required",
+                email: "required",
+                status: "required",
+                phone: "required",
+                image_upload: "required",
+            },
+        });
 
-})
+    })
+

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use App\Models\Client;
 use Storage;
@@ -12,41 +13,41 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function register() {
+    public function register()
+    {
         return view('client.register');
     }
 
-    public function login() {
+    public function login()
+    {
         return view('client.login');
     }
 
-    public function save_login(Request $request) {
+    public function save_login(Request $request)
+    {
         $email = $request->email;
         $password = $request->password;
 
-        if(auth()->attempt(array('email' => $email, 'password' => $password)))
-        {
+        if (auth()->attempt(array('email' => $email, 'password' => $password))) {
             $credentials = $request->only('email', 'password');
 
             if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('authToken')->plainTextToken;
+                $user = Auth::user();
+                $token = $user->createToken('authToken')->plainTextToken;
 
-            return response()->json([
-                'access_token' => $token,
-                'token_type' => 'Bearer',
-            ]);
-        }
-        }
-        else
-        {
-            return response()->json([ [3] ]);
+                return response()->json([
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+            }
+        } else {
+            return response()->json([[3]]);
         }
     }
 
     public function save_register(Request $request)
     {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
         try {
             // Create new Client
@@ -91,7 +92,7 @@ class UserController extends Controller
         } catch (\Exception $e) {
             // Rollback transaction on error
             DB::rollback();
-            
+
             return response()->json([
                 "error" => "Failed to create customer: " . $e->getMessage(),
                 "status" => 500
@@ -99,7 +100,8 @@ class UserController extends Controller
         }
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $user = Auth::user();
         if ($user) {
             $user->tokens()->delete(); // Revoke all tokens
