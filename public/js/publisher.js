@@ -54,13 +54,15 @@ $(document).ready(function () {
 
     new DataTable('#publisherTable', {
         ajax: {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+             },
             url: 'api/publisher',
             dataType: 'json',
             dataSrc: ''  // This ensures DataTables expects an array directly from the JSON response
         },
         columns: [
             { data: 'id' },
-            { data: 'images' },
             { data: 'name' },
             { data: 'email' },
             { data: 'phone' },
@@ -138,22 +140,23 @@ $(document).ready(function () {
                     data: formData,
                     contentType: false,
                     processData: false,
-                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+             },
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
                         $("#publisherModal").modal("hide");
-                        var img = "<img src='storage/" + data.publisher.images + "' width='200px', height='200px'/>";
+                        // var img = "<img src='storage/" + data.publisher.images + "' width='200px', height='200px'/>";
                         var tr = $("<tr>");
                         tr.append($("<td>").html(data.publisher.id));
-                        tr.append($("<td>").html(img));
                         tr.append($("<td>").html(data.publisher.name));
                         tr.append($("<td>").html(data.publisher.email));
                         tr.append($("<td>").html(data.publisher.phone));
                         tr.append($("<td>").html(data.publisher.status));
                         tr.append($("<td>").html(data.publisher.phone));
                         tr.append('<td align="center"><button data-toggle="modal" data-target="#publisherModal" class="btn btn-sm btn-primary edit-btn" data-id="' + data.publisher.id + '">Edit</button></td>');
-                        tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.publisher.id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
+                        tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='"+data.publisher.id+"'>Delete</button></td>");
                         $("#publisherBody").prepend(tr);
                     },
 
@@ -180,6 +183,9 @@ $(document).ready(function () {
         $.ajax({
             type: "GET",
             url: `/api/publisher/${id}`,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+     },
             success: function (data) {
                 // console.log(data);
                 $("#publisherId").val(data.id);
@@ -227,7 +233,9 @@ $(document).ready(function () {
                     $.ajax({
                         type: "DELETE",
                         url: `/api/publisher/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                 },
                         dataType: "json",
                         success: function (data) {
                             console.log(data);
@@ -261,7 +269,9 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
@@ -271,14 +281,14 @@ $(document).ready(function () {
                     var img = "<img src='storage/" + data.publisher.images + "' width='200px', height='200px'/>";
                     var tr = $("<tr>");
                     tr.append($("<td>").html(data.publisher.id));
-                    tr.append($("<td>").html(img));
+                    // tr.append($("<td>").html(img));
                     tr.append($("<td>").html(data.publisher.name));
                     tr.append($("<td>").html(data.publisher.email));
                     tr.append($("<td>").html(data.publisher.phone));
                     tr.append($("<td>").html(data.publisher.status));
                     tr.append($("<td>").html(data.publisher.country));
-                    tr.append("<td align='center'><a href='#' data-toggle='modal' data-target='#authorModal' id='editbtn' data-id=" + data.publisher.id + "><i class='fas fa-edit' aria-hidden='true' style='font-size:24px' ></a></i></td>");
-                    tr.append("<td><a href='#'  class='deletebtn' data-id=" + data.publisher.id + "><i  class='fa fa-trash' style='font-size:24px; color:red' ></a></i></td>");
+                    tr.append("<td align='center'><button data-toggle='modal' data-target='#publisherModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.publisher.id + "'>Edit</button></td>");
+                    tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='"+data.publisher.id+"'>Delete</button></td>");
                     $('#publisherTable').prepend(tr.hide().fadeIn(5000));
                 },
                 error: function (error) {

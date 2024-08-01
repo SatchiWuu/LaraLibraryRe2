@@ -16,7 +16,6 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>image</th>
           <th>Name</th>
           <th>Email</th>
           <th>Phone</th>

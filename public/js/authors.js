@@ -49,6 +49,9 @@ $(document).ready(function () {
     new DataTable('#authorTable', {
         ajax: {
             url: 'api/authors',
+            headers: {
+                 'Authorization': `Bearer ${localStorage.getItem('token')}`
+              },
             dataType: 'json',
             dataSrc: ''  // This ensures DataTables expects an array directly from the JSON response
         },
@@ -98,7 +101,9 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                 },
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
@@ -111,8 +116,8 @@ $(document).ready(function () {
                     tr.append($("<td>").html(data.author.address));
                     tr.append($("<td>").html(data.author.phone));
                     tr.append($("<td>").html(data.author.gender));
-                    tr.append("<td align='center'><button data-toggle='modal' data-target='#authorModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.id + "'>Edit</button></td>");
-                    tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" + data.id + "'>Delete</button></td>");
+                    tr.append("<td align='center'><button data-toggle='modal' data-target='#authorModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.author.id + "'>Edit</button></td>");
+                    tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" + data.author.id + "'>Delete</button></td>");
                     $("#authorBody").prepend(tr);
                 },
                 error: function (error) {
@@ -136,6 +141,9 @@ $(document).ready(function () {
         $.ajax({
             type: "GET",
             url: `/api/authors/${id}`,
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+     },
             success: function (data) {
                 // console.log(data);
                 $("#authorId").val(data.id);
@@ -183,8 +191,11 @@ $(document).ready(function () {
                     $.ajax({
                         type: "DELETE",
                         url: `/api/authors/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        
                         dataType: "json",
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                 },
                         success: function (data) {
                             console.log(data);
                             $row.fadeOut(800, function () {
@@ -217,7 +228,9 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
@@ -232,8 +245,8 @@ $(document).ready(function () {
                     tr.append($("<td>").html(data.author.address));
                     tr.append($("<td>").html(data.author.phone));
                     tr.append($("<td>").html(data.author.gender));
-                    tr.append("<td align='center'><button data-toggle='modal' data-target='#authorModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.id + "'>Edit</button></td>");
-                    tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" + data.id + "'>Delete</button></td>");
+                    tr.append("<td align='center'><button data-toggle='modal' data-target='#authorModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.author.id + "'>Edit</button></td>");
+                    tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" + data.author.id + "'>Delete</button></td>");
                     $("#authorBody").prepend(tr);
                 },
                 error: function (error) {

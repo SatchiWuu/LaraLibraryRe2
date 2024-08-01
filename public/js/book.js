@@ -71,6 +71,9 @@ $(document).ready(function () {
     
     new DataTable('#bookTable', {
         ajax: {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+             },
             url: 'api/book',
             dataType: 'json',
             dataSrc: ''  // This ensures DataTables expects an array directly from the JSON response
@@ -132,7 +135,9 @@ $(document).ready(function () {
                     $.ajax({
                         type: "DELETE",
                         url: `/api/book/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                 },
                         dataType: "json",
                         success: function (data) {
                             console.log(data);
@@ -159,6 +164,9 @@ $(document).ready(function () {
             $.ajax({
                 type: "GET",
                 url: `/api/book/${id}`,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
                 success: function (data) {
                     var selectBox = $('#authorBox');
                     var selectBox2 = $('#publisherBox');
@@ -188,6 +196,9 @@ $(document).ready(function () {
                     $.ajax({
                         type: "GET",
                         url: `/api/authors`,
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                 },
                         success: function (data) {
 
                             $.each(data, function (key, value) {
@@ -205,6 +216,9 @@ $(document).ready(function () {
                     $.ajax({
                         type: "GET",
                         url: `/api/publisher`,
+                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                 },
                         success: function (data) {
 
                             var selectBox = $('#publisherBox');
@@ -232,6 +246,9 @@ $(document).ready(function () {
             $.ajax({
                 type: "GET",
                 url: `/api/authors`,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
                 success: function (data) {
                     var selectBox = $('#authorBox');
                     selectBox.empty();
@@ -250,6 +267,9 @@ $(document).ready(function () {
             $.ajax({
                 type: "GET",
                 url: `/api/publisher`,
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
                 success: function (data) {
 
                     var selectBox = $('#publisherBox');
@@ -292,7 +312,9 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
                 dataType: "json",
                 success: function (data) {
                     console.log(data)
@@ -308,8 +330,8 @@ $(document).ready(function () {
                     tr.append($("<td>").html(data.book.language));
                     tr.append($("<td>").html(data.book.reviews));
                     tr.append($("<td>").html(data.book.summary));
-                    tr.append("<td align='center'><button data-toggle='modal' data-target='#bookModal' class='btn btn-sm btn-primary edit-btn' data-id='" + data.id + '">Edit</button>/td>');
-                    tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" + data.id + "'>Delete</button></td>");
+                    tr.append("<td align='center'><button data-toggle='modal' data-target='#bookModal' class='btn btn-sm btn-primary edit-btn' data-id='" +data.book.id + '">Edit</button></td>');
+                    tr.append("<td><button class='btn btn-sm btn-danger delete-btn deletebtn'  data-id='" +data.book.id + "'>Delete</button></td>");
                     $("#bookBody").prepend(tr);
                 },
                 error: function (error) {
@@ -340,7 +362,9 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+         },
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
