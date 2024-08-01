@@ -20,9 +20,11 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::apiResource('authors', AuthorController::class);
-Route::apiResource('book', BookController::class);
-Route::apiResource('publisher', PublisherController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('authors', AuthorController::class);
+    Route::apiResource('book', BookController::class);
+    Route::apiResource('publisher', PublisherController::class);
+});
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

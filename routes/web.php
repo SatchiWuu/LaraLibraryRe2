@@ -31,12 +31,9 @@ Route::get('/book', function () {
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
 });
-Route::get('/miggy', function () {
-    return view('miggy');
-});
 
 Route::get('/register', [App\Http\Controllers\UserController::class, 'register']);
-Route::get('/login', [App\Http\Controllers\UserController::class, 'login']);
+Route::get('/login', [App\Http\Controllers\UserController::class, 'login'])->name('login');
 Route::post('/save_register', [App\Http\Controllers\UserController::class, 'save_register'])->name('save_user');
 Route::post('/save_login', [App\Http\Controllers\UserController::class, 'save_login'])->name('save_login');
 Route::post('/logout', [App\Http\Controllers\UserController::class, 'logout'])->name('logout');
